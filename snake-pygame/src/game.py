@@ -39,9 +39,8 @@ frame_size_y = 480
 
 
 # Main logic
-def game(story: Story, background_path: pathlib.Path):
-    print(background_path)
-
+def game(stories: List[Story], background_path: pathlib.Path):
+    story = random.choice(stories)
     # Checks for errors encountered
     check_errors = pygame.init()
     # pygame.init() example output -> (6, 0)
@@ -86,7 +85,15 @@ def game(story: Story, background_path: pathlib.Path):
     score = 0
 
     def on_eat_food():
-        print(story)
+        nonlocal story
+
+        if score > len(story["steps"]) and score % len(story["steps"]) == 1:
+            story = random.choice(stories)
+            print("story", story)
+            show_dialogue(
+                f"Começando a próxima etapa de sua aventura: '{story['title']}'"
+            )
+
         title = story["title"]
         current_step = story["steps"][score % len(story["steps"])]
         show_dialogue(f"'{title}' - {current_step}")
@@ -117,10 +124,6 @@ def game(story: Story, background_path: pathlib.Path):
             overlay.fill((30, 30, 30))  # Gray color
 
             game_window.blit(overlay, (0, 0))
-
-            # game_window.fill(
-            #     (30, 30, 30)
-            # )  # Replace with background/game frame if needed
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -281,7 +284,7 @@ def main():
         print(f"Error decoding JSON: {e}")
         exit(1)
     game(
-        random.choice(stories),
+        stories,
         RESOURCE_DIR / random.choice(backgrounds),
     )
 
