@@ -89,10 +89,10 @@ def main(story: Story, background_path: pathlib.Path):
         print(story)
         title = story["title"]
         current_step = story["steps"][score % len(story["steps"])]
-        show_dialogue(f"{title} - {current_step}")
+        show_dialogue(f"'{title}' - {current_step}")
 
     def draw_text_box(text):
-        wrapped_text = textwrap.fill(text, 40)
+        wrapped_text = textwrap.fill(text, 39)
         print(wrapped_text)
         box_rect = pygame.Rect(50 / PIX, 450 / PIX, 720 / PIX, 480 / PIX)
         pygame.draw.rect(game_window, (0, 0, 0), box_rect)
@@ -168,6 +168,7 @@ def main(story: Story, background_path: pathlib.Path):
         game_window.blit(score_surface, score_rect)
         # pygame.display.flip()
 
+    on_eat_food()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -211,9 +212,9 @@ def main(story: Story, background_path: pathlib.Path):
         # Snake body growing mechanism
         snake_body.insert(0, list(snake_pos))
         if snake_pos[0] == food_pos[0] and snake_pos[1] == food_pos[1]:
-            on_eat_food()
             score += 1
             food_spawn = False
+            on_eat_food()
         else:
             snake_body.pop()
 
